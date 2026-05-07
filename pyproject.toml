@@ -1,7 +1,7 @@
 [project]
 name = "freshservice-mcp"
-version = "1.0.0"
-description = "An MCP server for Freshservice"
+version = "1.0.0+wp1"
+description = "An MCP server for Freshservice (Warby Parker fork — Gemini Enterprise schema-compatible)"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

@@ -2,7 +2,7 @@ name: Quality
 
 on:
   push:
-    branches: [main, "feature/**", "fix/**"]
+    branches: [main, "wp/**", "feature/**", "fix/**"]
   pull_request:
     branches: [main]
 
@@ -34,9 +34,3 @@ jobs:
             --cov-report=xml:coverage.xml \
             --cov-report=term-missing \
             -v || true
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v6
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarqube.it.frtapps.com

@@ -34,9 +34,9 @@ def register_problem_tools(mcp) -> None:  # NOSONAR
         category: Optional[str] = None,
         sub_category: Optional[str] = None,
         item_category: Optional[str] = None,
-        assets: Optional[List[Dict[str, Any]]] = None,
-        analysis_fields: Optional[Dict[str, Any]] = None,
-        custom_fields: Optional[Dict[str, Any]] = None,
+        assets: Optional[List[Dict[str, str]]] = None,
+        analysis_fields: Optional[Dict[str, str]] = None,
+        custom_fields: Optional[Dict[str, str]] = None,
         # filter / pagination
         query: Optional[str] = None,
         page: int = 1,

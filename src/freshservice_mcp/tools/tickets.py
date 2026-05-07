@@ -52,13 +52,13 @@ def register_tickets_tools(mcp) -> None:  # NOSONAR
         # create / update fields
         subject: Optional[str] = None,
         description: Optional[str] = None,
-        source: Optional[Union[int, str]] = None,
-        priority: Optional[Union[int, str]] = None,
-        status: Optional[Union[int, str]] = None,
+        source: Optional[int] = None,
+        priority: Optional[int] = None,
+        status: Optional[int] = None,
         email: Optional[str] = None,
         requester_id: Optional[int] = None,
-        custom_fields: Optional[Dict[str, Any]] = None,
-        ticket_fields: Optional[Dict[str, Any]] = None,
+        custom_fields: Optional[Dict[str, str]] = None,
+        ticket_fields: Optional[Dict[str, str]] = None,
         # filter / list
         query: Optional[str] = None,
         page: int = 1,

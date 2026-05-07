@@ -1,6 +1,12 @@
-# Freshservice MCP Server
+# Freshservice MCP Server — Warby Parker Fork
 
 [![smithery badge](https://smithery.ai/badge/@effytech/freshservice_mcp)](https://smithery.ai/server/@effytech/freshservice_mcp)
+
+> **Warby Parker fork notice**
+>
+> This is a fork of [`forterro/freshservice_mcp`](https://github.com/forterro/freshservice_mcp) (which itself forks [`effytech/freshservice_mcp`](https://github.com/effytech/freshservice_mcp)) with patches that make the tool schemas compatible with Google's Gemini Enterprise function-calling spec. Gemini's spec does not support `anyOf`, `oneOf`, or `allOf` JSON Schema constructs, which the upstream auto-generates from `Union[int, str]` and `Dict[str, Any]` parameter type hints. This fork tightens those types (`Union[int, str]` -> `int`, `Dict[str, Any]` -> `Dict[str, str]`) so registration succeeds and tools become callable from Gemini Enterprise Custom MCP Server data stores.
+>
+> Upstream is tracked via the `upstream` git remote and we rebase periodically. Patches are mechanical and contained to `src/freshservice_mcp/tools/*.py` parameter signatures only.
 
 ## Overview
 

@@ -36,7 +36,7 @@ def register_requesters_tools(mcp) -> None:  # NOSONAR
         language: Optional[str] = None,
         location_id: Optional[int] = None,
         background_information: Optional[str] = None,
-        custom_fields: Optional[Dict[str, Any]] = None,
+        custom_fields: Optional[Dict[str, str]] = None,
         # filter
         query: Optional[str] = None,
         include_agents: bool = False,

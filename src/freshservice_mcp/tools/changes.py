@@ -44,11 +44,11 @@ def register_changes_tools(mcp) -> None:  # noqa: C901  # NOSONAR
         requester_id: Optional[int] = None,
         subject: Optional[str] = None,
         description: Optional[str] = None,
-        priority: Optional[Union[int, str]] = None,
-        impact: Optional[Union[int, str]] = None,
-        status: Optional[Union[int, str]] = None,
-        risk: Optional[Union[int, str]] = None,
-        change_type: Optional[Union[int, str]] = None,
+        priority: Optional[int] = None,
+        impact: Optional[int] = None,
+        status: Optional[int] = None,
+        risk: Optional[int] = None,
+        change_type: Optional[int] = None,
         group_id: Optional[int] = None,
         agent_id: Optional[int] = None,
         department_id: Optional[int] = None,
@@ -61,9 +61,9 @@ def register_changes_tools(mcp) -> None:  # noqa: C901  # NOSONAR
         change_impact: Optional[str] = None,
         rollout_plan: Optional[str] = None,
         backout_plan: Optional[str] = None,
-        custom_fields: Optional[Dict[str, Any]] = None,
-        assets: Optional[List[Dict[str, Any]]] = None,
-        impacted_services: Optional[List[Dict[str, Any]]] = None,
+        custom_fields: Optional[Dict[str, str]] = None,
+        assets: Optional[List[Dict[str, str]]] = None,
+        impacted_services: Optional[List[Dict[str, str]]] = None,
         maintenance_window_id: Optional[int] = None,
         # close
         change_result_explanation: Optional[str] = None,
@@ -467,7 +467,7 @@ def register_changes_tools(mcp) -> None:  # noqa: C901  # NOSONAR
         assigned_to_id: Optional[int] = None,
         task_group_id: Optional[int] = None,
         due_date: Optional[str] = None,
-        task_fields: Optional[Dict[str, Any]] = None,
+        task_fields: Optional[Dict[str, str]] = None,
     ) -> Dict[str, Any]:
         """Manage tasks on a change.
 

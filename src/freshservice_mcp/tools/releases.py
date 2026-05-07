@@ -38,9 +38,9 @@ def register_release_tools(mcp) -> None:  # NOSONAR
         sub_category: Optional[str] = None,
         item_category: Optional[str] = None,
         # associations
-        assets: Optional[List[Dict[str, Any]]] = None,
-        planning_fields: Optional[Dict[str, Any]] = None,
-        custom_fields: Optional[Dict[str, Any]] = None,
+        assets: Optional[List[Dict[str, str]]] = None,
+        planning_fields: Optional[Dict[str, str]] = None,
+        custom_fields: Optional[Dict[str, str]] = None,
         # filter / pagination
         query: Optional[str] = None,
         page: int = 1,
