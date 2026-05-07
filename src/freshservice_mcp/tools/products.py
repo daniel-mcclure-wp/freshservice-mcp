@@ -18,7 +18,7 @@ def register_products_tools(mcp) -> None:  # NOSONAR
         name: Optional[str] = None,
         asset_type_id: Optional[int] = None,
         manufacturer: Optional[str] = None,
-        status: Optional[Union[str, int]] = None,
+        status: Optional[int] = None,
         mode_of_procurement: Optional[str] = None,
         depreciation_type_id: Optional[int] = None,
         description: Optional[str] = None,

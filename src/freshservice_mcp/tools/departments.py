@@ -22,7 +22,7 @@ def register_department_tools(mcp) -> None:  # NOSONAR
         head_user_id: Optional[int] = None,
         prime_user_id: Optional[int] = None,
         domains: Optional[List[str]] = None,
-        custom_fields: Optional[Dict[str, Any]] = None,
+        custom_fields: Optional[Dict[str, str]] = None,
         # filter / pagination
         query: Optional[str] = None,
         page: int = 1,

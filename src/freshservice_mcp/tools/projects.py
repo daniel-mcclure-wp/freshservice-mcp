@@ -50,10 +50,10 @@ def register_project_tools(mcp) -> None:  # noqa: C901  # NOSONAR
         end_date: Optional[str] = None,
         visibility: Optional[int] = None,
         sprint_duration: Optional[int] = None,
-        custom_fields: Optional[Dict[str, Any]] = None,
+        custom_fields: Optional[Dict[str, str]] = None,
         project_template_id: Optional[int] = None,
         # members (add_members)
-        members: Optional[List[Dict[str, Any]]] = None,
+        members: Optional[List[Dict[str, str]]] = None,
         # associations (create_association / view_associations / delete_association)
         module_name: Optional[str] = None,
         ids: Optional[List[int]] = None,
@@ -369,7 +369,7 @@ def register_project_tools(mcp) -> None:  # noqa: C901  # NOSONAR
         story_points: Optional[int] = None,
         sprint_id: Optional[int] = None,
         version_id: Optional[int] = None,
-        custom_fields: Optional[Dict[str, Any]] = None,
+        custom_fields: Optional[Dict[str, str]] = None,
         # notes (create_note / update_note)
         note_id: Optional[int] = None,
         content: Optional[str] = None,

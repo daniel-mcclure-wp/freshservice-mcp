@@ -243,7 +243,7 @@ def register_agents_tools(mcp) -> None:  # NOSONAR
         auto_ticket_assign: Optional[bool] = None,
         escalate_to: Optional[int] = None,
         unassigned_for: Optional[str] = None,
-        group_fields: Optional[Dict[str, Any]] = None,
+        group_fields: Optional[Dict[str, str]] = None,
     ) -> Dict[str, Any]:
         """Manage agent groups.
 
