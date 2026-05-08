@@ -4,9 +4,13 @@
 
 > **Warby Parker fork notice**
 >
-> This is a fork of [`forterro/freshservice_mcp`](https://github.com/forterro/freshservice_mcp) (which itself forks [`effytech/freshservice_mcp`](https://github.com/effytech/freshservice_mcp)) with patches that make the tool schemas compatible with Google's Gemini Enterprise function-calling spec. Gemini's spec does not support `anyOf`, `oneOf`, or `allOf` JSON Schema constructs, which the upstream auto-generates from `Union[int, str]` and `Dict[str, Any]` parameter type hints. This fork tightens those types (`Union[int, str]` -> `int`, `Dict[str, Any]` -> `Dict[str, str]`) so registration succeeds and tools become callable from Gemini Enterprise Custom MCP Server data stores.
+> This is a fork of [`forterro/freshservice_mcp`](https://github.com/forterro/freshservice_mcp) (which itself forks [`effytech/freshservice_mcp`](https://github.com/effytech/freshservice_mcp)) with two sets of patches:
 >
-> Upstream is tracked via the `upstream` git remote and we rebase periodically. Patches are mechanical and contained to `src/freshservice_mcp/tools/*.py` parameter signatures only.
+> 1. **Gemini Enterprise schema compatibility** (`wp/gemini-schema-compat`) — Gemini's function-calling spec does not support `anyOf`, `oneOf`, or `allOf` JSON Schema constructs, which the upstream auto-generates from `Union[int, str]` and `Dict[str, Any]` parameter type hints. This fork tightens those types (`Union[int, str]` -> `int`, `Dict[str, Any]` -> `Dict[str, str]`) so registration succeeds and tools become callable from Gemini Enterprise Custom MCP Server data stores.
+>
+> 2. **`FORCE_API_KEY` opt-in** (`wp/api-key-fallback`) — when the `FORCE_API_KEY` env var is truthy (`true`/`1`/`yes`), the server always uses the env-var `FRESHSERVICE_APIKEY` for outbound calls and ignores any forwarded `Authorization` header. This is required when the upstream gateway forwards a Freshworks OAuth Bearer token, which is valid for embedded apps but rejected by the Freshservice REST API at `/api/v2/*`.
+>
+> Upstream is tracked via the `upstream` git remote and we rebase periodically. Patches are mechanical and contained to `src/freshservice_mcp/tools/*.py` parameter signatures and `src/freshservice_mcp/http_client.py`.
 
 ## Overview
 
