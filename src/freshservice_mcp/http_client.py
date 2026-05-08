@@ -1,4 +1,5 @@
 """Freshservice MCP — Shared HTTP client utilities."""
+import os
 import re
 import base64
 import json
@@ -14,18 +15,33 @@ from .telemetry import API_REQUESTS, API_DURATION, _path_root, trace_span
 _ATTR_METHOD = "http.method"
 _ATTR_PATH_ROOT = "http.path_root"
 
+# Opt-in: when set, always prefer the env-var API key over any forwarded
+# credential.  Useful when the upstream gateway forwards an OAuth Bearer
+# token that the Freshservice REST API rejects (Freshworks OAuth tokens
+# work for embedded apps but are not accepted at /api/v2/* endpoints).
+_FORCE_API_KEY = os.getenv("FORCE_API_KEY", "").lower() in ("1", "true", "yes")
+
+
+def _api_key_basic_header() -> str:
+    return f"Basic {base64.b64encode(f'{FRESHSERVICE_APIKEY}:X'.encode()).decode()}"
+
 
 def _auth_header() -> str:
     """Return the Authorization header value.
 
-    Uses the forwarded credentials from the MCP gateway when available
-    (Bearer for OAuth, Basic for API key).  Falls back to Basic Auth
-    with the env-var API key (stdio / local dev).
+    Default precedence: forwarded credentials (Bearer for OAuth, Basic
+    for API key) from the MCP gateway, falling back to env-var API key
+    (stdio / local dev).
+
+    When ``FORCE_API_KEY`` is truthy the env-var API key is always used,
+    bypassing any forwarded credentials.
     """
+    if _FORCE_API_KEY and FRESHSERVICE_APIKEY:
+        return _api_key_basic_header()
     forwarded = forwarded_auth_var.get()
     if forwarded:
         return forwarded
-    return f"Basic {base64.b64encode(f'{FRESHSERVICE_APIKEY}:X'.encode()).decode()}"
+    return _api_key_basic_header()
 
 
 def get_auth_headers() -> Dict[str, str]:
