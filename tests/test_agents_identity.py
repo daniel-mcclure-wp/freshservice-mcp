@@ -107,16 +107,32 @@ class TestGetMeOAuth:
             assert "token_claims" in result
 
     @pytest.mark.asyncio
-    async def test_jwt_agent_not_found(self, tools):
-        """Should report no agent found when API returns empty list."""
+    async def test_jwt_agent_not_found_still_returns_email(self, tools):
+        """Empty agent list should still return the JWT email as identity."""
         tool = _t(tools, "get_me")
         token = _jwt_token({"email": "ghost@corp.com"})
         with patch(f"{AGENTS_MOD}._auth_header", return_value=f"Bearer {token}"), \
              patch(f"{AGENTS_MOD}.api_get", new_callable=AsyncMock) as m:
             m.return_value = _resp({"agents": []})
             result = await tool.fn()
-            assert "error" in result
-            assert "ghost@corp.com" in result["error"]
+            assert "error" not in result
+            assert result["email"] == "ghost@corp.com"
+            assert result["source"] == "oauth_jwt"
+            assert "note" in result
+
+    @pytest.mark.asyncio
+    async def test_jwt_profile_lookup_403_still_returns_email(self, tools):
+        """A 403 on the agent-profile lookup must NOT discard the JWT identity."""
+        tool = _t(tools, "get_me")
+        token = _jwt_token({"email": "dave@corp.com"})
+        with patch(f"{AGENTS_MOD}._auth_header", return_value=f"Bearer {token}"), \
+             patch(f"{AGENTS_MOD}.api_get", new_callable=AsyncMock) as m:
+            m.side_effect = Exception("403 Forbidden")
+            result = await tool.fn()
+            assert "error" not in result
+            assert result["email"] == "dave@corp.com"
+            assert result["source"] == "oauth_jwt"
+            assert "note" in result
 
     @pytest.mark.asyncio
     async def test_jwt_decode_error(self, tools):

@@ -20,12 +20,19 @@ def register_agents_tools(mcp) -> None:  # NOSONAR
     # ------------------------------------------------------------------ #
     @mcp.tool()
     async def get_me() -> Dict[str, Any]:
-        """Return the identity of the currently authenticated user.
+        """Return the identity (email) of the currently authenticated user.
+
+        ALWAYS call this first when the user asks about "my" tickets,
+        assets, or anything else scoped to themselves, then filter by the
+        returned email (e.g. tickets where the responder/requester email
+        matches).
 
         When an OAuth token is present (forwarded by ContextForge), the
-        tool decodes the JWT payload to extract the user's email, then
-        queries the Freshservice agents API to return the full agent
-        profile.  Falls back to GET /api/v2/agents/me when using API
+        tool decodes the JWT payload to extract the user's email. It then
+        attempts to enrich this with the full Freshservice agent profile;
+        if that lookup is not permitted (e.g. 403 from a scope gap), the
+        email identity alone is still returned and is sufficient for
+        filtering. Falls back to GET /api/v2/agents/me when using API
         key authentication (local dev / stdio).
         """
         auth = _auth_header()
@@ -48,7 +55,9 @@ def register_agents_tools(mcp) -> None:  # NOSONAR
                 return {"error": "Could not extract email from OAuth token payload",
                         "token_claims": list(payload.keys())}
 
-            # Look up the agent by email
+            # The JWT email alone is a usable identity; the agent-profile
+            # lookup below is best-effort enrichment only.
+            identity: Dict[str, Any] = {"email": email, "source": "oauth_jwt"}
             try:
                 resp = await api_get("agents", params={
                     "query": f"email:'{email}'"
@@ -57,11 +66,16 @@ def register_agents_tools(mcp) -> None:  # NOSONAR
                 data = resp.json()
                 agents = data.get("agents", [])
                 if agents:
-                    return {"agent": agents[0], "source": "oauth_jwt"}
-                return {"error": f"No agent found for email '{email}'",
-                        "source": "oauth_jwt"}
+                    return {"agent": agents[0], "email": email, "source": "oauth_jwt"}
+                identity["note"] = ("No agent profile found for this email; use the "
+                                    "email to filter tickets/assets scoped to this user.")
+                return identity
             except Exception as e:
-                return handle_error(e, f"look up agent by email '{email}'")
+                enrich_err = handle_error(e, f"look up agent profile for '{email}'")
+                identity["note"] = ("Agent profile lookup unavailable "
+                                    f"({enrich_err.get('error', 'error')}); use the email to "
+                                    "filter tickets/assets scoped to this user.")
+                return identity
         else:
             # API key mode — /agents/me should work
             try:

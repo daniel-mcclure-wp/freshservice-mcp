@@ -837,24 +837,27 @@ class TestAgentIdentity:
 
     @pytest.mark.asyncio
     async def test_oauth_mode_not_found(self, tool):
-        """When OAuth lookup finds no agent, returns error."""
+        """When OAuth lookup finds no agent, still returns the JWT email identity."""
         token = self._make_token({"email": "unknown@co.com"})
         with patch(f"{self.MOD}._auth_header", return_value=f"Bearer {token}"), \
              patch(f"{self.MOD}.api_get", new_callable=AsyncMock) as m:
             m.return_value = _ok({"agents": []})
             result = await tool.fn()
-            assert "error" in result
-            assert "unknown@co.com" in result["error"]
+            assert "error" not in result
+            assert result["email"] == "unknown@co.com"
+            assert "note" in result
 
     @pytest.mark.asyncio
     async def test_oauth_mode_api_error(self, tool):
-        """When OAuth API call fails, returns error."""
+        """When the profile-enrichment call fails, the JWT email identity survives."""
         token = self._make_token({"email": "x@co.com"})
         with patch(f"{self.MOD}._auth_header", return_value=f"Bearer {token}"), \
              patch(f"{self.MOD}.api_get", new_callable=AsyncMock) as m:
             m.side_effect = Exception("Network error")
             result = await tool.fn()
-            assert "error" in result
+            assert "error" not in result
+            assert result["email"] == "x@co.com"
+            assert "note" in result
 
     @pytest.mark.asyncio
     async def test_apikey_mode_error(self, tool):
